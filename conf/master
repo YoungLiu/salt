@@ -53,7 +53,7 @@
 # Directory for custom modules. This directory can contain subdirectories for
 # each of Salt's module types such as "runners", "output", "wheel", "modules",
 # "states", "returners", etc.
-#extension_modules: <no default>
+extension_modules: /srv/extension_modules
 
 # Directory for custom modules. This directory can contain subdirectories for
 # each of Salt's module types such as "runners", "output", "wheel", "modules",
