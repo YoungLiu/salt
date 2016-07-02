@@ -13,7 +13,7 @@
 
 # Set the location of the salt master server. If the master server cannot be
 # resolved, then the minion will fail to start.
-#master: salt
+master: localhost
 
 # Set http proxy information for the minion when doing requests
 #proxy_host:
@@ -70,7 +70,7 @@
 #master_port: 4506
 
 # The user to run salt.
-#user: root
+user: root
 
 # The user to run salt remote execution commands as via sudo. If this option is
 # enabled then sudo will be used to change the active user executing the remote
@@ -100,7 +100,7 @@
 # Since salt uses detached ids it is possible to run multiple minions on the
 # same machine but with different ids, this can be useful for salt compute
 # clusters.
-#id:
+id: saltdev
 
 # Cache the minion id to a file when the minion's id is not statically defined
 # in the minion config. Defaults to "True". This setting prevents potential

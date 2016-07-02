@@ -12,7 +12,7 @@
 #default_include: master.d/*.conf
 
 # The address of the interface to bind to:
-#interface: 0.0.0.0
+interface: 0.0.0.0
 
 # Whether the master should listen for IPv6 connections. If this is set to True,
 # the interface option must be adjusted, too. (For example: "interface: '::'")
@@ -25,7 +25,7 @@
 # permissions to allow the specified user to run the master. The exception is
 # the job cache, which must be deleted if this user is changed. If the
 # modified files cause conflicts, set verify_env to False.
-#user: root
+user: root
 
 # The port used by the communication interface. The ret (return) port is the
 # interface used for the file server, authentication, job returns, etc.
@@ -319,6 +319,15 @@ extension_modules: /srv/extension_modules
 #    fred:
 #      - test.*
 #
+external_auth:
+  pam:
+    fred:
+      - test.*
+    salt:
+      - .*
+      - '@runner'
+      - '@wheel'
+
 # Time (in seconds) for a newly generated token to live. Default: 12 hours
 #token_expire: 43200
 #
@@ -439,7 +448,7 @@ extension_modules: /srv/extension_modules
 # the output will be shortened to a single line.  If set to 'mixed', the output
 # will be terse unless a state failed, in which case that output will be full.
 # If set to 'changes', the output will be full unless the state didn't change.
-#state_output: full
+state_output: full
 
 # Automatically aggregate all states that have support for mod_aggregate by
 # setting to 'True'. Or pass a list of state module names to automatically
@@ -476,10 +485,9 @@ extension_modules: /srv/extension_modules
 #     - /srv/salt/prod/services
 #     - /srv/salt/prod/states
 #
-#file_roots:
-#  base:
-#    - /srv/salt
-#
+file_roots:
+  base:
+    - /srv/salt
 
 # When using multiple environments, each with their own top file, the
 # default behaviour is an unordered merge. To prevent top files from
@@ -636,10 +644,10 @@ extension_modules: /srv/extension_modules
 # Pillar is laid out in the same fashion as the file server, with environments,
 # a top file and sls files. However, pillar data does not need to be in the
 # highstate format, and is generally just key/value pairs.
-#pillar_roots:
-#  base:
-#    - /srv/pillar
-#
+pillar_roots:
+  base:
+    - /srv/pillar
+
 #ext_pillar:
 #  - hiera: /etc/hiera.yaml
 #  - cmd_yaml: cat /etc/salt/yaml
@@ -992,3 +1000,11 @@ extension_modules: /srv/extension_modules
 ############################################
 # Default match type for filtering events tags: startswith, endswith, find, regex, fnmatch
 #event_match_type: startswith
+
+
+rest_tornado:
+  port: 5417
+  disable_ssl: true
+  host: 101.251.246.110
+  websockets: True
+  cors_origin: '*'
