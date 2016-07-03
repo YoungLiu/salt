@@ -120,10 +120,10 @@ def output(data):
     # structure the output data
     terse = TerseDisplay()
     retData = ""
-    for minion_id, data in dataJson.items():
+    for minion_id, data_minion in data.items():
         retData += minion_id
         retData += '=' * len(minion_id)
-        for key, value in dataJson[minion_id].items():
+        for key, value in data[minion_id].items():
             # use the result to change the output color
             retData += '\n'.join(
                 terse.display(value['comment'], __opts__.get('output_indent', 0), '', [], value['result']))
