@@ -125,6 +125,5 @@ def output(data):
         retData += '=' * len(minion_id) + '\n'
         for key, value in data[minion_id].items():
             # use the result to change the output color
-            retData += '\n'.join(
-                terse.display(value['comment'], __opts__.get('output_indent', 0), '', [], value['result']))
+            retData += terse.display(value['comment'], __opts__.get('output_indent', 0), '', [], value['result']) + '\n'
     return retData
