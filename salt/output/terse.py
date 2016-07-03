@@ -61,31 +61,27 @@ class TerseDisplay(object):
         except UnicodeDecodeError:
             return fmt.format(indent, color, prefix, salt.utils.locales.sdecode(msg), endc, suffix)
 
-    def display(self, ret, indent, prefix, out, flag):
+    def display(self, ret, indent, prefix, flag):
         '''
         Recursively iterate down through data structures to determine output
         '''
         if flag is True:
             # the result is True
-            out.append(
-                self.ustring(
-                    indent,
-                    self.GREEN,
-                    ret,
-                    prefix=prefix
-                )
+            return self.ustring(
+                indent,
+                self.GREEN,
+                ret,
+                prefix=prefix
             )
+
         elif flag is False:
             # the result is false
-            out.append(
-                self.ustring(
-                    indent,
-                    self.RED,
-                    ret,
-                    prefix=prefix
-                )
+            return self.ustring(
+                indent,
+                self.RED,
+                ret,
+                prefix=prefix
             )
-        return out
 
 
 def output(data):
@@ -125,5 +121,5 @@ def output(data):
         retData += '=' * len(minion_id) + '\n'
         for key, value in data[minion_id].items():
             # use the result to change the output color
-            retData += terse.display(value['comment'], __opts__.get('output_indent', 0), '', [], value['result']) + '\n'
+            retData += terse.display(value['comment'], __opts__.get('output_indent', 0), '', value['result']) + '\n'
     return retData
