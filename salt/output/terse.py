@@ -121,8 +121,8 @@ def output(data):
     terse = TerseDisplay()
     retData = ""
     for minion_id, data_minion in data.items():
-        retData += minion_id
-        retData += '=' * len(minion_id)
+        retData += minion_id + '\n'
+        retData += '=' * len(minion_id) + '\n'
         for key, value in data[minion_id].items():
             # use the result to change the output color
             retData += '\n'.join(
