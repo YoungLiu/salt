@@ -17,15 +17,9 @@ import salt.utils.locales
 
 log = logging.getLogger(__name__)
 
-# Define the module's virtual name
-__virtualname__ = 'terse'
-
 
 def __virtual__():
-    '''
-    Rename to terse
-    '''
-    return __virtualname__
+    return "terse"
 
 
 class TerseDisplay(object):
@@ -62,9 +56,7 @@ class TerseDisplay(object):
             return fmt.format(indent, color, prefix, salt.utils.locales.sdecode(msg), endc, suffix)
 
     def display(self, ret, indent, prefix, flag):
-        '''
-        Recursively iterate down through data structures to determine output
-        '''
+
         if flag is True:
             # the result is True use green display
             return self.ustring(
@@ -91,7 +83,7 @@ def output(data):
     # structure the output data
     terse = TerseDisplay()
     retData = []
-    itemTemplate = Template('$minion \n $separator \n $itemRet')
+    itemTemplate = Template('$minion \n$separator \n$itemRet')
     for minion_id, data_minion in data.items():
         # use the result to change the output color
         itemRetList = ['%s' % (terse.display(value['comment'], __opts__.get('output_indent', 0), '', value['result']))
