@@ -66,7 +66,7 @@ class TerseDisplay(object):
         Recursively iterate down through data structures to determine output
         '''
         if flag is True:
-            # the result is True
+            # the result is True use green display
             return self.ustring(
                 indent,
                 self.GREEN,
@@ -75,7 +75,7 @@ class TerseDisplay(object):
             )
 
         elif flag is False:
-            # the result is false
+            # the result is false use red display
             return self.ustring(
                 indent,
                 self.RED,
@@ -88,38 +88,13 @@ def output(data):
     '''
         display the terse output data
     '''
-    try:
-        if 'output_indent' not in __opts__:
-            dataJson = json.dumps(data, default=repr, indent=4)
-
-        indent = __opts__.get('output_indent')
-        sort_keys = False
-
-        if indent is None:
-            indent = None
-
-        elif indent == 'pretty':
-            indent = 4
-            sort_keys = True
-
-        elif isinstance(indent, int):
-            if indent >= 0:
-                indent = indent
-            else:
-                indent = None
-
-        dataJson = json.dumps(data, default=repr, indent=indent, sort_keys=sort_keys)
-
-    except TypeError:
-        log.debug('An error occurred while change the outputdata into JSON', exc_info=True)
-
     # structure the output data
     terse = TerseDisplay()
-    retData = ""
+    retData = []
     for minion_id, data_minion in data.items():
-        retData += minion_id + '\n'
-        retData += '=' * len(minion_id) + '\n'
-        for key, value in data[minion_id].items():
-            # use the result to change the output color
-            retData += terse.display(value['comment'], __opts__.get('output_indent', 0), '', value['result']) + '\n'
-    return retData
+        # use the result to change the output color
+        itemRetList = ['%s' % (terse.display(value['comment'], __opts__.get('output_indent', 0), '', value['result']))
+                       for key, value in data[minion_id].items()]
+        retData.append(['%s \n %s \n %s \n' % (minion_id, '=' * len(minion_id), '\n'.join(itemRetList))])
+
+    return '\n'.join(retData)

@@ -124,8 +124,6 @@ def get_printout(out, opts=None, **kwargs):
 
     if out == 'text':
         out = 'txt'
-    elif out == 'terse':
-        out = 'terse'
     elif out is None or out == '':
         out = 'nested'
     if opts.get('progress', False):
