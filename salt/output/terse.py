@@ -9,7 +9,7 @@ The terse output just include XXX service is success or XXX process is dead.
 # Import Python libs
 from __future__ import absolute_import
 import logging
-import json
+from string import Template
 
 # Import salt libs
 from salt.utils import get_colors
@@ -91,10 +91,11 @@ def output(data):
     # structure the output data
     terse = TerseDisplay()
     retData = []
+    itemTemplate = Template('$minion \n $separator \n $itemRet')
     for minion_id, data_minion in data.items():
         # use the result to change the output color
         itemRetList = ['%s' % (terse.display(value['comment'], __opts__.get('output_indent', 0), '', value['result']))
                        for key, value in data[minion_id].items()]
-        retData.append(['%s \n %s \n %s \n' % (minion_id, '=' * len(minion_id), '\n'.join(itemRetList))])
+        retData.append(itemTemplate.safe_substitute(minion = minion_id, separator = '=' * len(minion_id), itemRet = '\n'.join(itemRetList)))
 
     return '\n'.join(retData)
