@@ -17,6 +17,7 @@ from salt.utils import get_colors
 import salt.utils.locales
 
 log = logging.getLogger(__name__)
+itemTemplate = Template('$minion \n$separator \n$itemRet')
 
 
 def __virtual__():
@@ -109,6 +110,22 @@ def jsonDisplay(data):
     return json.dumps({})
 
 
+def handleOtherFormat(data):
+    '''
+    handle the other format output which do not meet the state.apply returner
+    :param data:
+    :return:
+    '''
+    retData = []
+    try:
+        for minion_id, data_minion in data.items():
+            retData.append(itemTemplate.safe_substitute(minion=minion_id, separator='=' * len(minion_id),
+                                                        itemRet=jsonDisplay(data_minion)))
+    except BaseException:
+        return jsonDisplay(data)
+    return '\n'.join(retData)
+
+
 def output(data):
     '''
         display the terse output data
@@ -116,7 +133,6 @@ def output(data):
     # structure the output data
     terse = TerseDisplay()
     retData = []
-    itemTemplate = Template('$minion \n$separator \n$itemRet')
     try:
         for minion_id, data_minion in data.items():
             # use the result to change the output color
@@ -127,6 +143,6 @@ def output(data):
             retData.append(itemTemplate.safe_substitute(minion=minion_id, separator='=' * len(minion_id),
                                                         itemRet='\n'.join(eachMinionRet)))
     except BaseException:
-        return jsonDisplay(data)
+        return handleOtherFormat(data)
 
     return '\n'.join(retData)
