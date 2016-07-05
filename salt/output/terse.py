@@ -9,6 +9,7 @@ The terse output just include XXX service is success or XXX process is dead.
 # Import Python libs
 from __future__ import absolute_import
 import logging
+import json
 from string import Template
 
 # Import salt libs
@@ -76,6 +77,38 @@ class TerseDisplay(object):
             )
 
 
+def jsonDisplay(data):
+    '''
+    output in the json format
+    '''
+    try:
+        if 'output_indent' not in __opts__:
+            return json.dumps(data, default=repr, indent=4)
+
+        indent = __opts__.get('output_indent')
+        sort_keys = False
+
+        if indent is None:
+            indent = None
+
+        elif indent == 'pretty':
+            indent = 4
+            sort_keys = True
+
+        elif isinstance(indent, int):
+            if indent >= 0:
+                indent = indent
+            else:
+                indent = None
+
+        return json.dumps(data, default=repr, indent=indent, sort_keys=sort_keys)
+
+    except TypeError:
+        log.debug('An error occurred while outputting JSON', exc_info=True)
+    # Return valid JSON for unserializable objects
+    return json.dumps({})
+
+
 def output(data):
     '''
         display the terse output data
@@ -84,12 +117,16 @@ def output(data):
     terse = TerseDisplay()
     retData = []
     itemTemplate = Template('$minion \n$separator \n$itemRet')
-    for minion_id, data_minion in data.items():
-        # use the result to change the output color
-        eachMinionRet = []
-        for key, value in data[minion_id].items():
-            eachMinionRet.append(
-                terse.display(value['comment'], __opts__.get('output_indent', 0), '', value['result']))
-        retData.append(itemTemplate.safe_substitute(minion=minion_id, separator='=' * len(minion_id),
-                                                    itemRet='\n'.join(eachMinionRet)))
+    try:
+        for minion_id, data_minion in data.items():
+            # use the result to change the output color
+            eachMinionRet = []
+            for key, value in data[minion_id].items():
+                eachMinionRet.append(
+                    terse.display(value['comment'], __opts__.get('output_indent', 0), '', value['result']))
+            retData.append(itemTemplate.safe_substitute(minion=minion_id, separator='=' * len(minion_id),
+                                                        itemRet='\n'.join(eachMinionRet)))
+    except BaseException:
+        return jsonDisplay(data)
+
     return '\n'.join(retData)
