@@ -86,8 +86,10 @@ def output(data):
     itemTemplate = Template('$minion \n$separator \n$itemRet')
     for minion_id, data_minion in data.items():
         # use the result to change the output color
-        itemRetList = ['%s' % (terse.display(value['comment'], __opts__.get('output_indent', 0), '', value['result']))
-                       for key, value in data[minion_id].items()]
-        retData.append(itemTemplate.safe_substitute(minion = minion_id, separator = '=' * len(minion_id), itemRet = '\n'.join(itemRetList)))
-
+        eachMinionRet = []
+        for key, value in data[minion_id].items():
+            eachMinionRet.append(
+                terse.display(value['comment'], __opts__.get('output_indent', 0), '', value['result']))
+        retData.append(itemTemplate.safe_substitute(minion=minion_id, separator='=' * len(minion_id),
+                                                    itemRet='\n'.join(eachMinionRet)))
     return '\n'.join(retData)
