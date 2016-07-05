@@ -116,11 +116,13 @@ def handleOtherFormat(data):
     :param data:
     :return:
     '''
+    terse = TerseDisplay()
     retData = []
     try:
         for minion_id, data_minion in data.items():
+            data_minionStr = terse.display(jsonDisplay(data_minion), __opts__.get('output_indent', 0), '', False)
             retData.append(itemTemplate.safe_substitute(minion=minion_id, separator='=' * len(minion_id),
-                                                        itemRet=jsonDisplay(data_minion)))
+                                                        itemRet=data_minionStr))
     except BaseException:
         return jsonDisplay(data)
     return '\n'.join(retData)
