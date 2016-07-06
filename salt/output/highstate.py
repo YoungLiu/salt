@@ -122,7 +122,7 @@ def output(data):
     The HighState Outputter is only meant to be used with the state.highstate
     function, or a function that returns highstate return data.
     '''
-
+    log.error("DEBUG!!")
     # Discard retcode in dictionary as present in orchestrate data
     local_masters = [key for key in data.keys() if key.endswith('.local_master')]
     orchestrator_output = 'retcode' in data.keys() and len(local_masters) == 1
