@@ -153,12 +153,14 @@ def _format_host(host, data):
     if isinstance(data, int) or isinstance(data, str):
         # Data in this format is from saltmod.function,
         # so it is always a 'change'
+        log.info(str(data) + ">>>is int or str")
         nchanges = 1
         hstrs.append((u'{0}    {1}{2[ENDC]}'
                       .format(hcolor, data, colors)))
         hcolor = colors['CYAN']  # Print the minion name in cyan
     if isinstance(data, list):
         # Errors have been detected, list them in RED!
+        log.info(str(data) + ">>>is list")
         hcolor = colors['LIGHT_RED']
         hstrs.append((u'    {0}Data failed to compile:{1[ENDC]}'
                       .format(hcolor, colors)))
@@ -169,6 +171,7 @@ def _format_host(host, data):
                           .format(hcolor, err, colors)))
     if isinstance(data, dict):
         # Verify that the needed data is present
+        log.info(str(data) + ">>>is dict")
         data_tmp = {}
         for tname, info in six.iteritems(data):
             if isinstance(info, dict) and '__run_num__' not in info:
