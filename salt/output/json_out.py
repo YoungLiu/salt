@@ -52,6 +52,8 @@ def output(data):
     '''
     Print the output data in JSON
     '''
+    log.info("json output start")
+    log.info("data is >>>" + str(data))
     try:
         if 'output_indent' not in __opts__:
             return json.dumps(data, default=repr, indent=4)
