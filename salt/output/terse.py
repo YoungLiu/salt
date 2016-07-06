@@ -208,38 +208,38 @@ def _format_host(host, data):
             )
 
         # Successful states
-        # changestats = []
-        # if None in rcounts and rcounts.get(None, 0) > 0:
-        #     # test=True states
-        #     changestats.append(
-        #         colorfmt.format(
-        #             colors['LIGHT_YELLOW'],
-        #             u'unchanged={0}'.format(rcounts.get(None, 0)),
-        #             colors
-        #         )
-        #     )
-        # if nchanges > 0:
-        #     changestats.append(
-        #         colorfmt.format(
-        #             colors['GREEN'],
-        #             u'changed={0}'.format(nchanges),
-        #             colors
-        #         )
-        #     )
-        # if changestats:
-        #     changestats = u' ({0})'.format(', '.join(changestats))
-        # else:
-        #     changestats = u''
-        # hstrs.append(
-        #     colorfmt.format(
-        #         colors['GREEN'],
-        #         _counts(
-        #             rlabel[True],
-        #             rcounts.get(True, 0) + rcounts.get(None, 0)
-        #         ),
-        #         colors
-        #     ) + changestats
-        # )
+        changestats = []
+        if None in rcounts and rcounts.get(None, 0) > 0:
+            # test=True states
+            changestats.append(
+                colorfmt.format(
+                    colors['LIGHT_YELLOW'],
+                    u'unchanged={0}'.format(rcounts.get(None, 0)),
+                    colors
+                )
+            )
+        if nchanges > 0:
+            changestats.append(
+                colorfmt.format(
+                    colors['GREEN'],
+                    u'changed={0}'.format(nchanges),
+                    colors
+                )
+            )
+        if changestats:
+            changestats = u' ({0})'.format(', '.join(changestats))
+        else:
+            changestats = u''
+        hstrs.append(
+            colorfmt.format(
+                colors['GREEN'],
+                _counts(
+                    rlabel[True],
+                    rcounts.get(True, 0) + rcounts.get(None, 0)
+                ),
+                colors
+            ) + changestats
+        )
 
         # Failed states
         num_failed = rcounts.get(False, 0)
@@ -264,18 +264,6 @@ def _format_host(host, data):
                                                sum(six.itervalues(rcounts)) - rcounts.get('warnings', 0),
                                                line_max_len - 7)
         hstrs.append(colorfmt.format(colors['CYAN'], totals, colors))
-
-        if __opts__.get('state_output_profile', False):
-            sum_duration = sum(rdurations)
-            duration_unit = 'ms'
-            # convert to seconds if duration is 1000ms or more
-            if sum_duration > 999:
-                sum_duration /= 1000
-                duration_unit = 's'
-            total_duration = u'Total run time: {0} {1}'.format(
-                '{0:.3f}'.format(sum_duration).rjust(line_max_len - 5),
-                duration_unit)
-            hstrs.append(colorfmt.format(colors['CYAN'], total_duration, colors))
 
     hstrs.insert(0, (u'{0}{1}:{2[ENDC]}'.format(hcolor, host, colors)))
     return u'\n'.join(hstrs), nchanges > 0

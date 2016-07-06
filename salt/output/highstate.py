@@ -221,6 +221,8 @@ def _format_host(host, data):
 
             if schanged:
                 tcolor = colors['CYAN']
+            if ret['result'] is True:
+                continue;
             if ret['result'] is False:
                 hcolor = colors['RED']
                 tcolor = colors['RED']
