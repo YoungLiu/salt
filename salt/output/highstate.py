@@ -123,6 +123,7 @@ def output(data):
     function, or a function that returns highstate return data.
     '''
     log.info("highstate start to output")
+    log.info("data is >>>" + str(data))
     # If additional information is passed through via the "data" dictionary to
     # the highstate outputter, such as "outputter" or "retcode", discard it.
     # We only want the state data that was passed through, if it is wrapped up
