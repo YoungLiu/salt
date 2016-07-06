@@ -122,8 +122,14 @@ def output(data):
     The HighState Outputter is only meant to be used with the state.highstate
     function, or a function that returns highstate return data.
     '''
-    log.info("highstate start to output")
-    log.info("data is >>>" + str(data))
+
+    # Discard retcode in dictionary as present in orchestrate data
+    local_masters = [key for key in data.keys() if key.endswith('.local_master')]
+    orchestrator_output = 'retcode' in data.keys() and len(local_masters) == 1
+
+    if orchestrator_output:
+        del data['retcode']
+
     # If additional information is passed through via the "data" dictionary to
     # the highstate outputter, such as "outputter" or "retcode", discard it.
     # We only want the state data that was passed through, if it is wrapped up
@@ -153,14 +159,12 @@ def _format_host(host, data):
     if isinstance(data, int) or isinstance(data, str):
         # Data in this format is from saltmod.function,
         # so it is always a 'change'
-        log.info(str(data) + ">>>is int or str")
         nchanges = 1
         hstrs.append((u'{0}    {1}{2[ENDC]}'
                       .format(hcolor, data, colors)))
         hcolor = colors['CYAN']  # Print the minion name in cyan
     if isinstance(data, list):
         # Errors have been detected, list them in RED!
-        log.info(str(data) + ">>>is list")
         hcolor = colors['LIGHT_RED']
         hstrs.append((u'    {0}Data failed to compile:{1[ENDC]}'
                       .format(hcolor, colors)))
@@ -171,10 +175,9 @@ def _format_host(host, data):
                           .format(hcolor, err, colors)))
     if isinstance(data, dict):
         # Verify that the needed data is present
-        log.info(str(data) + ">>>is dict")
         data_tmp = {}
         for tname, info in six.iteritems(data):
-            if isinstance(info, dict) and '__run_num__' not in info:
+            if isinstance(info, dict) and tname is not 'changes' and '__run_num__' not in info:
                 err = (u'The State execution failed to record the order '
                        'in which all states were executed. The state '
                        'return missing data is:')
@@ -221,8 +224,6 @@ def _format_host(host, data):
 
             if schanged:
                 tcolor = colors['CYAN']
-            if ret['result'] is True:
-                continue;
             if ret['result'] is False:
                 hcolor = colors['RED']
                 tcolor = colors['RED']
