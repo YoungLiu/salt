@@ -40,8 +40,8 @@ def _format_host(host, data):
     host = sdecode(host)
 
     colors = salt.utils.get_colors(
-            __opts__.get('color'),
-            __opts__.get('color_theme'))
+        __opts__.get('color'),
+        __opts__.get('color_theme'))
     rcounts = {}
     rdurations = []
     hcolor = colors['GREEN']
@@ -78,8 +78,8 @@ def _format_host(host, data):
         data = data_tmp
         # Everything rendered as it should display the output
         for tname in sorted(
-                data,
-                key=lambda k: data[k].get('__run_num__', 0)):
+            data,
+            key=lambda k: data[k].get('__run_num__', 0)):
             ret = data[tname]
             # Increment result counts
             rcounts.setdefault(ret['result'], 0)
@@ -104,6 +104,7 @@ def _format_host(host, data):
             if schanged:
                 tcolor = colors['CYAN']
             if ret['result'] is True:
+                # we do not need to see the success result
                 continue;
             if ret['result'] is False:
                 hcolor = colors['RED']
@@ -133,8 +134,8 @@ def _format_host(host, data):
             try:
                 comment = sdecode(ret['comment'])
                 comment = comment.strip().replace(
-                        u'\n',
-                        u'\n' + u' ' * 14)
+                    u'\n',
+                    u'\n' + u' ' * 14)
             except AttributeError:  # Assume comment is a list
                 try:
                     comment = ret['comment'].join(' ').replace(
@@ -263,11 +264,10 @@ def _format_host(host, data):
                 )
             )
         totals = u'{0}\nTotal states run: {1:>{2}}'.format('-' * line_max_len,
-                                               sum(six.itervalues(rcounts)) - rcounts.get('warnings', 0),
-                                               line_max_len - 7)
-        hstrs.append(colorfmt.format(colors['CYAN'], totals, colors))
+                                                           sum(six.itervalues(rcounts)) - rcounts.get('warnings', 0),
+                                                           line_max_len - 7)
+        hstrs.insert(0, colorfmt.format(colors['CYAN'], totals, colors))
 
-    hstrs.insert(0, (u'{0}{1}:{2[ENDC]}'.format(hcolor, host, colors)))
     return u'\n'.join(hstrs), nchanges > 0
 
 
@@ -301,9 +301,9 @@ def _format_changes(changes):
         __opts__['nested_indent'] = 14
         ctext = u'\n'
         ctext += salt.output.out_format(
-                changes,
-                'nested',
-                __opts__)
+            changes,
+            'nested',
+            __opts__)
         __opts__ = opts
     return changed, ctext
 
