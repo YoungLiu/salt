@@ -198,7 +198,7 @@ def _format_host(host, data):
         hstrs.append(
             colorfmt.format(
                 colors['CYAN'],
-                u'\nSummary for {0}\n{1}'.format(host, '-' * line_max_len),
+                u'\nSummary for {0}'.format(host, '>' * 5),
                 colors
             )
         )
@@ -266,8 +266,9 @@ def _format_host(host, data):
         totals = u'{0}\nTotal states run: {1:>{2}}'.format('-' * line_max_len,
                                                            sum(six.itervalues(rcounts)) - rcounts.get('warnings', 0),
                                                            line_max_len - 7)
-        hstrs.insert(0, colorfmt.format(colors['CYAN'], totals, colors))
+        hstrs.append(colorfmt.format(colors['CYAN'], totals, colors))
 
+    hstrs.insert(0, (u'{0}{1}:{2[ENDC]}'.format(hcolor, host, colors)))
     return u'\n'.join(hstrs), nchanges > 0
 
 
